@@ -18,7 +18,7 @@ export class UserService {
 
   // Create a new user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { name, email, password } = createUserDto;
+    const { email, password } = createUserDto;
 
     // Check if user already exists
     const existingUser = await this.userModel.findOne({ email });
