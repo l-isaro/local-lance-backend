@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { User } from '../user/schemas/user.schema'; // Assuming you have the User schema
+import { User } from '../user/schemas/user.schema';
 
 @Injectable()
 export class ProjectsService {
@@ -12,10 +12,9 @@ export class ProjectsService {
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
   ) {}
 
-  // Create a new project
   async createProject(
     createProjectDto: CreateProjectDto,
-    client: User,
+    client: Partial<User>,
   ): Promise<Project> {
     const { title, description, status } = createProjectDto;
     const project = new this.projectModel({
@@ -28,12 +27,10 @@ export class ProjectsService {
     return project.save();
   }
 
-  // Find all projects
   async findAllProjects(): Promise<Project[]> {
     return this.projectModel.find().exec();
   }
 
-  // Find a project by ID
   async findProjectById(projectId: string): Promise<Project> {
     const project = await this.projectModel.findById(projectId).exec();
     if (!project) {
@@ -42,24 +39,20 @@ export class ProjectsService {
     return project;
   }
 
-  // Update a project
   async updateProject(
     projectId: string,
     updateProjectDto: UpdateProjectDto,
   ): Promise<Project> {
     const project = await this.findProjectById(projectId);
 
-    // Apply the update
     Object.assign(project, updateProjectDto);
     project.updatedAt = new Date();
 
-    // Save the updated project
     return this.projectModel
       .findByIdAndUpdate(projectId, project, { new: true })
       .exec();
   }
 
-  // Delete a project
   async deleteProject(projectId: string): Promise<void> {
     await this.projectModel.findByIdAndDelete(projectId);
   }

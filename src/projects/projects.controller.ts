@@ -12,20 +12,21 @@ import {
 import { ProjectsService } from './projects.service';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard'; // Assuming you have a JwtAuthGuard for authentication
+import { AuthGuard } from '../auth/auth.guard'; // Assuming you have a JwtAuthGuard for authentication
 import { Request } from 'express';
 
 @Controller('projects')
 export class ProjectsController {
   constructor(private readonly projectService: ProjectsService) {}
 
+  @UseGuards(AuthGuard)
   @Post()
-  @UseGuards(JwtAuthGuard)
   async createProject(
     @Body() createProjectDto: CreateProjectDto,
     @Req() req: Request,
   ) {
     const client = req.user;
+    console.log(client);
     return this.projectService.createProject(createProjectDto, client);
   }
 
@@ -39,8 +40,8 @@ export class ProjectsController {
     return this.projectService.findProjectById(id);
   }
 
+  @UseGuards(AuthGuard)
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
   async updateProject(
     @Param('id') id: string,
     @Body() updateProjectDto: UpdateProjectDto,
@@ -49,7 +50,7 @@ export class ProjectsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthGuard)
   async deleteProject(@Param('id') id: string) {
     return this.projectService.deleteProject(id);
   }

@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
-import { User } from '../../user/schemas/user.schema';
+import { Document, Types } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
@@ -13,7 +12,7 @@ export class Project {
   description: string;
 
   @Prop({ required: true, ref: 'User' })
-  client: User;
+  client: Types.ObjectId;
 
   @Prop({ default: 'active' })
   status: string; // e.g., 'active', 'completed'
