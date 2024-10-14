@@ -22,10 +22,13 @@ export class UserController {
   async login(
     @Body() loginDto: LoginUserDto,
   ): Promise<{ access_token: string }> {
-    const user = await this.userService.createUser(loginDto);
+    const { email, password } = loginDto;
+    const user = await this.userService.login({ email, password });
+
     const payload = { email: user.email, role: user.role };
 
     const access_token = this.jwtService.sign(payload);
+
     return { access_token };
   }
 }

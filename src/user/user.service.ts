@@ -18,7 +18,7 @@ export class UserService {
 
   // Create a new user
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { email, password } = createUserDto;
+    const { email, password, role } = createUserDto;
 
     // Check if user already exists
     const existingUser = await this.userModel.findOne({ email });
@@ -30,12 +30,12 @@ export class UserService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create user
-    const user = new this.userModel({ name, email, password: hashedPassword });
+    const user = new this.userModel({ email, password: hashedPassword, role });
     return user.save();
   }
 
   // Login method: Authenticate user and return a JWT token
-  async login(loginUserDto: LoginUserDto): Promise<{ token: string }> {
+  async login(loginUserDto: LoginUserDto): Promise<User> {
     const { email, password } = loginUserDto;
 
     // Check if user exists
@@ -51,14 +51,13 @@ export class UserService {
     }
 
     // Generate JWT token
-    const token = this.generateJwtToken(user);
-    return { token };
+    return user; // Return the user object with email and role
   }
 
   // Generate JWT token
   private generateJwtToken(user: UserDocument): string {
-    const payload = { email: user.email, name: user.name, role: user.role };
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const payload = { email: user.email, role: user.role };
+    return jwt.sign(payload, process.env.JWT_SECRET);
   }
 
   // Find user by ID
@@ -79,7 +78,7 @@ export class UserService {
     return user;
   }
 
-  // Update user (name, password, or role)
+  // Update user (password or role)
   async updateUser(
     userId: string,
     updateUserDto: Partial<CreateUserDto>,
