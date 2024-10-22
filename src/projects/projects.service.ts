@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
-import { User } from '../user/schemas/user.schema';
+import { User } from 'src/user/schemas/user.schema';
 
 @Injectable()
 export class ProjectsService {

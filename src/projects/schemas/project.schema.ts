@@ -11,7 +11,7 @@ export class Project {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, ref: 'User' })
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   client: Types.ObjectId;
 
   @Prop({ default: 'active' })
