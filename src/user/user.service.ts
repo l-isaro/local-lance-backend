@@ -51,6 +51,10 @@ export class UserService {
     return { token }; // Return the token in the response
   }
 
+  async getAllUsers(): Promise<User[]> {
+    return this.userModel.find().exec();
+  }
+
   async findUserById(userId: string): Promise<User> {
     const user = await this.userModel.findById(userId).exec();
     if (!user) {
