@@ -27,7 +27,7 @@ export class ProjectsController {
   ) {
     const client = req.user;
     console.log(client);
-    return this.projectService.createProject(createProjectDto, client);
+    return this.projectService.createProject(createProjectDto, client.email);
   }
 
   @Get()

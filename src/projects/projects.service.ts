@@ -9,12 +9,13 @@ import { User } from 'src/user/schemas/user.schema';
 @Injectable()
 export class ProjectsService {
   constructor(
-    @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
+    @InjectModel(Project.name)
+    private readonly projectModel: Model<ProjectDocument>,
   ) {}
 
   async createProject(
     createProjectDto: CreateProjectDto,
-    client: Partial<User>,
+    client: Pick<User, 'email'>,
   ): Promise<Project> {
     const { title, description, status } = createProjectDto;
     const project = new this.projectModel({
