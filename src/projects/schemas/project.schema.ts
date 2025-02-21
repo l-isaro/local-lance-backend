@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';
+import { Document } from 'mongoose';
 
 export type ProjectDocument = Project & Document;
 
@@ -11,11 +11,14 @@ export class Project {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
-  client: Types.ObjectId;
+  @Prop({ required: true, type: String, lowercase: true })
+  client: string;
 
   @Prop({ default: 'active' })
-  status: string; // e.g., 'active', 'completed'
+  status: string;
+
+  @Prop({ required: true })
+  deadline: Date;
 
   @Prop({ default: Date.now })
   createdAt: Date;

@@ -17,11 +17,12 @@ export class ProjectsService {
     createProjectDto: CreateProjectDto,
     client: Pick<User, 'email'>,
   ): Promise<Project> {
-    const { title, description, status } = createProjectDto;
+    const { title, description, deadline, status } = createProjectDto;
     const project = new this.projectModel({
       title,
       description,
-      status: status || 'active', // Default status
+      status: status || 'active',
+      deadline,
       client,
     });
 
@@ -29,7 +30,9 @@ export class ProjectsService {
   }
 
   async findAllProjects(): Promise<Project[]> {
-    return this.projectModel.find().exec();
+    const currentDate = new Date();
+
+    return this.projectModel.find({ deadline: { $gte: currentDate } }).exec();
   }
 
   async findProjectById(projectId: string): Promise<Project> {
